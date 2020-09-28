@@ -112,7 +112,7 @@ public class PollingDao extends BinlogEntryReader {
 
     String pk = getPrimaryKey(handler);
 
-    String findEventsQuery = eventuateSqlDialect.addLimitToSql(String.format("SELECT * FROM %s WHERE %s = 0 ORDER BY %s ASC",
+    String findEventsQuery = eventuateSqlDialect.addLimitToSql(String.format("SELECT * FROM (SELECT * FROM %s WHERE %s = 0 ORDER BY %s ASC)",
             handler.getQualifiedTable(), PUBLISHED_FIELD, pk), ":limit");
 
     SqlRowSet sqlRowSet = DaoUtils.handleConnectionLost(maxAttemptsForPolling,
@@ -215,7 +215,8 @@ public class PollingDao extends BinlogEntryReader {
   }
 
   private String queryPrimaryKey(BinlogEntryHandler handler) throws SQLException {
-    String pk;
+    String pk = "ID";
+    /*
     Connection connection = null;
     try {
       connection = dataSource.getConnection();
@@ -243,7 +244,7 @@ public class PollingDao extends BinlogEntryReader {
         logger.warn(e.getMessage(), e);
       }
     }
-
+    */
     return pk;
   }
 
